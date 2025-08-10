@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AEP‑WEPLIN • Porcs vivants</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+    header { background: #2e7d32; padding: 1rem; color: white; }
+    header h1 { margin: 0; font-size: 1.5rem; }
+    nav a { color: white; margin-right: 1rem; text-decoration: none; }
+    .container { max-width: 900px; margin: auto; padding: 1rem; }
+    .pigs { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+    .pig { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .pig img { width: 100%; height: 180px; object-fit: cover; }
+    .pig-details { padding: .5rem .8rem; }
+    .pig-details h3 { margin: .3rem 0; }
+    .filter { margin-bottom: 1rem; display: flex; gap: .5rem; flex-wrap: wrap; }
+    input, select { padding: .4rem; }
+    footer { text-align: center; padding: 1rem; background: #eee; margin-top: 2rem; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>AEP‑WEPLIN • Porcs vivants</h1>
+    <nav>
+      <a href="#porcs">Porcs</a>
+      <a href="#eleveurs">Éleveurs</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+  <div class="container">
+    <section id="porcs">
+      <h2>Nos porcs vivants</h2>
+      <div class="filter">
+        <input type="text" id="search" placeholder="Rechercher race/éleveur…" />
+        <select id="sexe">
+          <option value="">Sexe</option>
+          <option value="Mâle">Mâle</option>
+          <option value="Femelle">Femelle</option>
+        </select>
+      </div>
+      <div class="pigs" id="pigs"></div>
+    </section>
+    <section id="eleveurs">
+      <h2>Éleveurs membres</h2>
+      <ul>
+        <li>Ferme Boniéré — Boniérédougou — Tél: +225 07 00 00 00</li>
+        <li>AEP‑WEPLIN Coop — Yamoussoukro — Tél: +225 05 11 22 33</li>
+      </ul>
+    </section>
+    <section id="contact">
+      <h2>Contact</h2>
+      <p>Email: contact@aep-weplin.ci</p>
+    </section>
+  </div>
+  <footer>
+    © 2025 AEP‑WEPLIN • Association des Éleveurs de Porcs • Côte d’Ivoire
+  </footer>
+  <script>
+    const pigs = [
+      { race: "Large White", poids: 95, sexe: "Mâle", prix: 120000, eleveur: "Ferme Boniéré", image: "https://images.unsplash.com/photo-1516466723877-e4ec1d736c8a?q=80&w=800" },
+      { race: "Landrace", poids: 80, sexe: "Femelle", prix: 110000, eleveur: "AEP‑WEPLIN Coop", image: "https://images.unsplash.com/photo-1557652184-30aa3d0a1583?q=80&w=800" },
+      { race: "Duroc", poids: 120, sexe: "Mâle", prix: 145000, eleveur: "Ferme Boniéré", image: "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?q=80&w=800" }
+    ];
+    const pigsContainer = document.getElementById('pigs');
+    const searchInput = document.getElementById('search');
+    const sexeSelect = document.getElementById('sexe');
+    function renderPigs(list){
+      pigsContainer.innerHTML = '';
+      list.forEach(pig => {
+        const div = document.createElement('div');
+        div.className = 'pig';
+        div.innerHTML = `
+          <img src="${pig.image}" alt="${pig.race}">
+          <div class="pig-details">
+            <h3>${pig.race}</h3>
+            <p>Poids: ${pig.poids} kg — Sexe: ${pig.sexe}</p>
+            <p>Éleveur: ${pig.eleveur}</p>
+            <p><strong>${pig.prix.toLocaleString('fr-FR')} CFA</strong></p>
+          </div>
+        `;
+        pigsContainer.appendChild(div);
+      });
+    }
+    function filterPigs(){
+      const q = searchInput.value.toLowerCase();
+      const sexe = sexeSelect.value;
+      const filtered = pigs.filter(p => {
+        return (!q || p.race.toLowerCase().includes(q) || p.eleveur.toLowerCase().includes(q)) &&
+               (!sexe || p.sexe === sexe);
+      });
+      renderPigs(filtered);
+    }
+    searchInput.addEventListener('input', filterPigs);
+    sexeSelect.addEventListener('change', filterPigs);
+    renderPigs(pigs);
+  </script>
+</body>
+</html>
